@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:background="@drawable/item_background"
+	android:foreground="?android:attr/selectableItemBackground"
+	android:orientation="vertical"
+	android:padding="8dp">
+
+	<ImageView
+		android:id="@+id/imageView"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:adjustViewBounds="true"
+		android:scaleType="fitCenter"
+		app:srcCompat="@drawable/ic_backdrop" />
+
+	<TextView
+		android:id="@+id/mediaName"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+		tools:text="Adventure Time 6x33 - Jermaine.mp4" />
+
+</LinearLayout>

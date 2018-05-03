@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:background="@drawable/item_background"
+	android:foreground="?android:attr/selectableItemBackground"
+	android:gravity="center"
+	android:orientation="vertical"
+	android:padding="16dp">
+
+	<TextView
+		android:id="@+id/stepTitle"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="16dp"
+		android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+		tools:text="Preparation" />
+
+	<ImageView
+		android:id="@+id/stillImage"
+		android:layout_width="wrap_content"
+		android:layout_height="150dp"
+		android:adjustViewBounds="true"
+		android:scaleType="fitCenter"
+		tools:src="@drawable/ic_backdrop" />
+
+	<EditText
+		android:id="@+id/editText"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:hint="Details"
+		android:ems="10"
+		android:inputType="textMultiLine"
+		android:importantForAutofill="no"
+		tools:ignore="UnusedAttribute" />
+
+</LinearLayout>

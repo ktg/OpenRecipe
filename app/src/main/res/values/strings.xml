@@ -1,0 +1,7 @@
+<resources>
+	<string name="app_name">OpenRecipe</string>
+	<string name="play">Play</string>
+	<string name="pause">Pause</string>
+	<string name="mark_start">Mark Start</string>
+	<string name="mark_end">Mark End</string>
+</resources>

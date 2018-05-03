@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:layout_weight="1"
+	android:clickable="true"
+	android:fitsSystemWindows="true"
+	android:focusable="true">
+
+	<com.google.android.exoplayer2.ui.PlayerView
+		android:id="@+id/playerView"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		app:repeat_toggle_modes="all|one"
+		app:use_controller="false" />
+
+
+	<android.support.constraint.ConstraintLayout
+		android:id="@+id/controlLayout"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_gravity="bottom"
+		android:background="#33000000"
+		android:padding="16dp">
+
+		<TextView
+			android:id="@+id/playerMediaName"
+			style="@style/TextAppearance.AppCompat.Medium"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:maxLines="2"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintHorizontal_bias="0.0"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent"
+			tools:text="Daddy-Daughter Card Wars" />
+
+		<Button
+			android:id="@+id/markStartButton"
+			style="@style/Base.Widget.AppCompat.Button.Borderless"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginEnd="16dp"
+			android:text="@string/mark_start"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toStartOf="@+id/playButton"
+			app:layout_constraintHorizontal_bias="0.5"
+			app:layout_constraintHorizontal_chainStyle="packed"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/playerProgress" />
+
+		<ImageButton
+			android:id="@+id/playButton"
+			style="@style/Widget.AppCompat.ActionButton"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:contentDescription="@string/play"
+			android:tint="@drawable/button_tint"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toStartOf="@+id/pauseButton"
+			app:layout_constraintHorizontal_bias="0.5"
+			app:layout_constraintStart_toEndOf="@+id/markStartButton"
+			app:layout_constraintTop_toBottomOf="@+id/playerProgress"
+			app:srcCompat="@drawable/ic_play_64dp" />
+
+		<ImageButton
+			android:id="@+id/pauseButton"
+			style="@style/Widget.AppCompat.ActionButton"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:contentDescription="@string/pause"
+			android:tint="@drawable/button_tint"
+			android:visibility="gone"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toStartOf="@+id/markEndButton"
+			app:layout_constraintHorizontal_bias="0.5"
+			app:layout_constraintStart_toEndOf="@+id/playButton"
+			app:layout_constraintTop_toBottomOf="@+id/playerProgress"
+			app:srcCompat="@drawable/ic_pause_64dp" />
+
+		<Button
+			android:id="@+id/markEndButton"
+			style="@style/Base.Widget.AppCompat.Button.Borderless"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="16dp"
+			android:text="@string/mark_end"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintHorizontal_bias="0.5"
+			app:layout_constraintStart_toEndOf="@+id/pauseButton"
+			app:layout_constraintTop_toBottomOf="@+id/playerProgress" />
+
+		<TextView
+			android:id="@+id/playerPosition"
+			android:layout_width="wrap_content"
+			android:layout_height="32dp"
+			android:gravity="center"
+			android:maxLines="1"
+			app:layout_constraintEnd_toStartOf="@id/playerProgress"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toBottomOf="@+id/playerMediaName"
+			tools:text="0:00" />
+
+		<com.google.android.exoplayer2.ui.DefaultTimeBar
+			android:id="@+id/playerProgress"
+			android:layout_width="0dp"
+			android:layout_height="32dp"
+			android:padding="8dp"
+			app:ad_marker_color="@color/colorAccent"
+			app:bar_height="8dp"
+			app:layout_constraintEnd_toStartOf="@+id/playerDuration"
+			app:layout_constraintStart_toEndOf="@+id/playerPosition"
+			app:layout_constraintTop_toBottomOf="@+id/playerMediaName" />
+
+		<TextView
+			android:id="@+id/playerDuration"
+			android:layout_width="wrap_content"
+			android:layout_height="32dp"
+			android:gravity="center"
+			android:maxLines="1"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintStart_toEndOf="@id/playerProgress"
+			app:layout_constraintTop_toBottomOf="@+id/playerMediaName"
+			tools:text="0:00" />
+	</android.support.constraint.ConstraintLayout>
+
+	<ProgressBar
+		android:id="@+id/spinner"
+		style="?android:attr/progressBarStyle"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+		android:visibility="gone"
+		tools:visibility="visible" />
+</FrameLayout>
+
+
+
