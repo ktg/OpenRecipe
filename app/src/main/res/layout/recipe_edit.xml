@@ -1,27 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/root"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
+	android:background="#FFF"
 	tools:context=".activity.RecipeEditActivity">
 
-	<android.support.v7.widget.RecyclerView
+	<View
+		android:layout_width="0px"
+		android:layout_height="0px"
+		android:focusable="true"
+		android:focusableInTouchMode="true" />
+
+	<androidx.appcompat.widget.Toolbar
+		android:id="@+id/toolbar"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@color/colorPrimary"
+		android:elevation="4dp"
+		android:theme="@style/ThemeOverlay.AppCompat.Dark"
+		app:layout_constraintEnd_toStartOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent">
+
+		<EditText
+			android:id="@+id/recipeEdit"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="@string/recipe_name"
+			android:imeOptions="actionDone"
+			android:importantForAutofill="no"
+			android:inputType="text|textCapSentences|textAutoCorrect"
+			android:singleLine="true"
+			android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
+			android:theme="@style/AppTheme.EditWhite"
+			tools:ignore="UnusedAttribute" />
+	</androidx.appcompat.widget.Toolbar>
+
+	<androidx.recyclerview.widget.RecyclerView
+		android:id="@+id/sectionView"
+		android:layout_width="200dp"
+		android:layout_height="0dp"
+		android:elevation="4dp"
+		app:layout_constraintBottom_toTopOf="@id/videoListHeader"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toEndOf="@id/recipeView"
+		app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+	<androidx.recyclerview.widget.RecyclerView
 		android:id="@+id/recipeView"
 		android:layout_width="0dp"
 		android:layout_height="0dp"
-		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintEnd_toStartOf="@+id/videoListView"
+		android:elevation="4dp"
+		app:layout_constraintBottom_toTopOf="@+id/videoListHeader"
+		app:layout_constraintEnd_toStartOf="@+id/sectionView"
 		app:layout_constraintStart_toStartOf="parent"
-		app:layout_constraintTop_toTopOf="parent" />
+		app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
-	<android.support.v7.widget.RecyclerView
+	<TextView
+		android:id="@+id/videoListHeader"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:background="#EEE"
+		android:paddingStart="8dp"
+		android:paddingTop="4dp"
+		android:paddingEnd="8dp"
+		android:text="Videos"
+		android:textAppearance="@style/TextAppearance.AppCompat.Small"
+		app:layout_constraintBottom_toTopOf="@+id/videoListView"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/recipeView" />
+
+	<androidx.recyclerview.widget.RecyclerView
 		android:id="@+id/videoListView"
-		android:layout_width="250dp"
-		android:layout_height="0dp"
+		android:layout_width="0dp"
+		android:layout_height="100dp"
+		android:background="#EEE"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
-		app:layout_constraintStart_toEndOf="@+id/recipeView"
-		app:layout_constraintTop_toTopOf="parent" />
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/videoListHeader" />
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,46 +1,43 @@
 package uk.ac.nott.mrl.openrecipe.loader
 
-import android.content.AsyncTaskLoader
 import android.content.Context
-import android.net.Uri
-import android.os.Environment
 import android.util.Log
-import java.io.File
+import androidx.loader.content.AsyncTaskLoader
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import okhttp3.Request
+import uk.ac.nott.mrl.openrecipe.OpenRecipe
+import uk.ac.nott.mrl.openrecipe.model.Video
 
-class VideoListLoader(context: Context) : AsyncTaskLoader<List<Uri>>(context) {
-	override fun loadInBackground(): List<Uri> {
-		return handleDirectory(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES), ArrayList())
-	}
 
-	private fun handleFile(file: File, sourceList: MutableList<Uri>) {
-		if (file.extension in VIDEO_EXTENSIONS) {
-			Log.i("VideoListLoader", "Adding " + file.absolutePath)
-			val uri = Uri.fromFile(file)
-			sourceList.add(uri)
-		}
-	}
-
-	private fun handleDirectory(directory: File, videos: MutableList<Uri>): List<Uri> {
-		Log.i("VideoListLoader", "Examining " + directory.absolutePath + ": " + directory.listFiles().size)
-		val children = directory.listFiles()
-		if (children != null) {
-			for (child in children) {
-				if (child.isDirectory) {
-					handleDirectory(child, videos)
-				} else {
-					handleFile(child, videos)
-				}
+class VideoListLoader(context: Context, private val recipe: String?) : AsyncTaskLoader<List<Video>>(context) {
+	private val gson = Gson()
+	override fun loadInBackground(): List<Video> {
+		try {
+			val urlBuilder = OpenRecipe.server.buildURL()
+					.addPathSegments("api/videos/recipe")
+			recipe?.let {
+				urlBuilder.addPathSegment(it)
 			}
+
+			val request = Request.Builder()
+					.url(urlBuilder.build())
+					.build()
+
+			val response = OpenRecipe.server.call(request).execute()
+			if (response.isSuccessful) {
+				return gson.fromJson(response.body()?.string(), object : TypeToken<List<Video>>() {}.type)
+			} else {
+				Log.w("VideoListLoader", response.message())
+			}
+		} catch (e: Exception) {
+			e.printStackTrace()
 		}
-		return videos
+		return emptyList()
 	}
 
 	override fun onStartLoading() {
 		super.onStartLoading()
 		forceLoad()
-	}
-
-	companion object {
-		private val VIDEO_EXTENSIONS = listOf("mp4", "mkv", "ogv", "3gp", "webm") /// avi?
 	}
 }

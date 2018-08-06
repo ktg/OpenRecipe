@@ -6,49 +6,75 @@
 	android:layout_height="match_parent"
 	android:layout_weight="1"
 	android:clickable="true"
-	android:fitsSystemWindows="true"
 	android:focusable="true">
+
+	<View
+		android:focusable="true"
+		android:focusableInTouchMode="true"
+		android:layout_width="0px"
+		android:layout_height="0px"/>
 
 	<com.google.android.exoplayer2.ui.PlayerView
 		android:id="@+id/playerView"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		app:repeat_toggle_modes="all|one"
+		app:surface_type="texture_view"
 		app:use_controller="false" />
 
-
-	<android.support.constraint.ConstraintLayout
+	<androidx.constraintlayout.widget.ConstraintLayout
 		android:id="@+id/controlLayout"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_gravity="bottom"
-		android:background="#33000000"
+		android:background="#4000"
 		android:padding="16dp">
 
-		<TextView
-			android:id="@+id/playerMediaName"
-			style="@style/TextAppearance.AppCompat.Medium"
+		<com.google.android.material.textfield.TextInputLayout
+			android:id="@+id/videoAnnotation"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="8dp"
+			android:layout_marginEnd="8dp"
+			android:hint="@string/video_clip_annotation"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintHorizontal_bias="0"
+			app:layout_constraintHorizontal_chainStyle="packed"
+			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintTop_toTopOf="parent">
+
+			<EditText
+				android:id="@+id/editAnnotation"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:imeOptions="actionDone"
+				android:importantForAutofill="no"
+				android:inputType="text|textAutoCorrect|textCapSentences"
+				android:maxLines="2"
+				tools:ignore="UnusedAttribute" />
+		</com.google.android.material.textfield.TextInputLayout>
+
+		<Button
+			android:id="@+id/hiddenDoneButton"
+			style="@style/Base.Widget.AppCompat.Button.Borderless"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:maxLines="2"
-			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintHorizontal_bias="0.0"
+			android:text="Done"
+			android:visibility="invisible"
+			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toTopOf="parent"
-			tools:text="Daddy-Daughter Card Wars" />
+			app:layout_constraintTop_toBottomOf="@+id/playerProgress" />
 
 		<Button
 			android:id="@+id/markStartButton"
 			style="@style/Base.Widget.AppCompat.Button.Borderless"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginEnd="16dp"
 			android:text="@string/mark_start"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toStartOf="@+id/playButton"
-			app:layout_constraintHorizontal_bias="0.5"
 			app:layout_constraintHorizontal_chainStyle="packed"
-			app:layout_constraintStart_toStartOf="parent"
+			app:layout_constraintStart_toEndOf="@+id/hiddenDoneButton"
 			app:layout_constraintTop_toBottomOf="@+id/playerProgress" />
 
 		<ImageButton
@@ -57,7 +83,6 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:contentDescription="@string/play"
-			android:tint="@drawable/button_tint"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toStartOf="@+id/pauseButton"
 			app:layout_constraintHorizontal_bias="0.5"
@@ -71,7 +96,6 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:contentDescription="@string/pause"
-			android:tint="@drawable/button_tint"
 			android:visibility="gone"
 			app:layout_constraintBottom_toBottomOf="parent"
 			app:layout_constraintEnd_toStartOf="@+id/markEndButton"
@@ -85,47 +109,64 @@
 			style="@style/Base.Widget.AppCompat.Button.Borderless"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginStart="16dp"
 			android:text="@string/mark_end"
 			app:layout_constraintBottom_toBottomOf="parent"
-			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintEnd_toStartOf="@+id/doneButton"
 			app:layout_constraintHorizontal_bias="0.5"
 			app:layout_constraintStart_toEndOf="@+id/pauseButton"
+			app:layout_constraintTop_toBottomOf="@+id/playerProgress" />
+
+		<Button
+			android:id="@+id/doneButton"
+			style="@style/Base.Widget.AppCompat.Button.Borderless"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="16dp"
+			android:text="Done"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintTop_toBottomOf="@+id/playerProgress" />
 
 		<TextView
 			android:id="@+id/playerPosition"
 			android:layout_width="wrap_content"
-			android:layout_height="32dp"
+			android:layout_height="0dp"
 			android:gravity="center"
 			android:maxLines="1"
+			android:padding="8dp"
+			app:layout_constraintBottom_toBottomOf="@+id/playerProgress"
 			app:layout_constraintEnd_toStartOf="@id/playerProgress"
 			app:layout_constraintStart_toStartOf="parent"
-			app:layout_constraintTop_toBottomOf="@+id/playerMediaName"
+			app:layout_constraintTop_toTopOf="@+id/playerProgress"
 			tools:text="0:00" />
 
 		<com.google.android.exoplayer2.ui.DefaultTimeBar
 			android:id="@+id/playerProgress"
 			android:layout_width="0dp"
-			android:layout_height="32dp"
+			android:layout_height="80dp"
 			android:padding="8dp"
-			app:ad_marker_color="@color/colorAccent"
-			app:bar_height="8dp"
+			app:ad_marker_color="@color/colorPrimaryDark"
+			app:bar_height="16dp"
 			app:layout_constraintEnd_toStartOf="@+id/playerDuration"
 			app:layout_constraintStart_toEndOf="@+id/playerPosition"
-			app:layout_constraintTop_toBottomOf="@+id/playerMediaName" />
+			app:layout_constraintTop_toBottomOf="@+id/videoAnnotation"
+			app:scrubber_color="@color/colorPrimary"
+			app:scrubber_dragged_size="36dp"
+			app:scrubber_enabled_size="32dp" />
 
 		<TextView
 			android:id="@+id/playerDuration"
 			android:layout_width="wrap_content"
-			android:layout_height="32dp"
+			android:layout_height="0dp"
 			android:gravity="center"
 			android:maxLines="1"
+			android:padding="16dp"
+			app:layout_constraintBottom_toBottomOf="@+id/playerProgress"
 			app:layout_constraintEnd_toEndOf="parent"
-			app:layout_constraintStart_toEndOf="@id/playerProgress"
-			app:layout_constraintTop_toBottomOf="@+id/playerMediaName"
+			app:layout_constraintStart_toEndOf="@+id/playerProgress"
+			app:layout_constraintTop_toTopOf="@+id/playerProgress"
 			tools:text="0:00" />
-	</android.support.constraint.ConstraintLayout>
+	</androidx.constraintlayout.widget.ConstraintLayout>
 
 	<ProgressBar
 		android:id="@+id/spinner"

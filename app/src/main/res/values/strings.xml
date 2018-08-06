@@ -4,4 +4,17 @@
 	<string name="pause">Pause</string>
 	<string name="mark_start">Mark Start</string>
 	<string name="mark_end">Mark End</string>
+	<string name="edit">Edit</string>
+	<string name="add_recipe">Add Recipe</string>
+	<string name="recipe_name">Recipe Name</string>
+	<string name="section_title">Step Name</string>
+	<string name="delete_section">Delete Step</string>
+	<string name="video_clip_annotation">Video Annotation</string>
+	<string name="undo">Undo</string>
+	<string name="section_removed">Step Removed</string>
+	<string name="name">Name</string>
+	<string name="email">Email</string>
+	<string name="start">Start</string>
+	<string name="server_url">Server URL</string>
+	<string name="create_recipe">Create Recipe</string>
 </resources>

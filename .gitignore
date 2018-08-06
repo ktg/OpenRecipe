@@ -8,3 +8,7 @@
 /build
 /captures
 .externalNativeBuild
+/server/videos/
+/server/db/
+/server/node_modules/
+/server/uploads/

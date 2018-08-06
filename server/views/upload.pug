@@ -1,0 +1,16 @@
+extends layout
+
+block content
+	form(action='/api/videos', method='post', encType="multipart/form-data")
+		input(type="hidden", name="cs", value=cs._id)
+		each camera, index in cs.cameras
+			div
+				input(type="radio", name="camera", id="camera_" + index, value=index, checked=index === 0)
+				label(for="camera_" + index)
+					= camera.name
+		div
+			input(type="file", name="video", accept=".mp4")
+		div
+			input(type="file", name="timings", accept=".csv")
+		div
+			input(type='submit', value='Upload!')

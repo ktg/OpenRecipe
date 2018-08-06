@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/linearLayout"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:layout_gravity="bottom"
+	android:background="#5000">
+
+	<ImageButton
+		android:id="@+id/exo_null"
+		style="@style/Widget.AppCompat.Button.Borderless"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:src="@drawable/ic_skip_previous_24dp"
+		android:visibility="invisible"
+		app:layout_constraintEnd_toStartOf="@id/exo_prev"
+		app:layout_constraintHorizontal_chainStyle="packed"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintBottom_toTopOf="@id/barrier"/>
+
+	<ImageButton
+		android:id="@+id/exo_prev"
+		style="@style/Widget.AppCompat.Button.Borderless"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:src="@drawable/ic_skip_previous_24dp"
+		app:layout_constraintEnd_toStartOf="@id/exo_pause"
+		app:layout_constraintStart_toEndOf="@id/exo_null"
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintBottom_toTopOf="@id/barrier"/>
+
+	<ImageButton
+		android:id="@+id/exo_pause"
+		style="@style/Widget.AppCompat.Button.Borderless"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:src="@drawable/ic_pause_36dp"
+		app:layout_constraintEnd_toStartOf="@id/exo_play"
+		app:layout_constraintStart_toEndOf="@+id/exo_prev"
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintBottom_toTopOf="@id/barrier"/>
+
+	<ImageButton
+		android:id="@+id/exo_play"
+		style="@style/Widget.AppCompat.Button.Borderless"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:src="@drawable/ic_play_36dp"
+		app:layout_constraintEnd_toStartOf="@id/exo_next"
+		app:layout_constraintStart_toEndOf="@+id/exo_pause"
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintBottom_toTopOf="@id/barrier"/>
+
+	<ImageButton
+		android:id="@+id/exo_next"
+		style="@style/Widget.AppCompat.Button.Borderless"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:src="@drawable/ic_skip_next_24dp"
+		app:layout_constraintEnd_toStartOf="@id/exo_fullscreen"
+		app:layout_constraintStart_toEndOf="@+id/exo_play"
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintBottom_toTopOf="@id/barrier"/>
+
+	<ImageButton
+		android:id="@+id/exo_fullscreen"
+		style="@style/Widget.AppCompat.Button.Borderless"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:src="@drawable/ic_fullscreen_24dp"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toEndOf="@+id/exo_next"
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintBottom_toTopOf="@id/barrier"/>
+
+	<androidx.constraintlayout.widget.Barrier
+		android:id="@+id/barrier"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		app:barrierDirection="top" />
+
+	<TextView
+		android:id="@+id/exo_position"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_margin="16dp"
+		android:textColor="#EEE"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toStartOf="@id/exo_progress"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/barrier"
+		tools:text="00:00" />
+
+
+	<com.google.android.exoplayer2.ui.DefaultTimeBar
+		android:id="@+id/exo_progress"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		app:bar_height="8dp"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toStartOf="@id/exo_duration"
+		app:layout_constraintStart_toEndOf="@id/exo_position"
+		app:layout_constraintTop_toBottomOf="@id/barrier"
+		app:scrubber_color="@color/colorPrimary"
+		app:scrubber_dragged_size="18dp"
+		app:scrubber_enabled_size="16dp" />
+
+	<TextView
+		android:id="@+id/exo_duration"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_margin="16dp"
+		android:textColor="#EEE"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toEndOf="@id/exo_progress"
+		app:layout_constraintTop_toBottomOf="@id/barrier"
+		tools:text="00:00" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

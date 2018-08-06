@@ -1,34 +1,34 @@
 package uk.ac.nott.mrl.openrecipe.adapter
 
-import android.app.LoaderManager
 import android.content.ClipData
 import android.content.Context
-import android.content.Loader
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.loader.app.LoaderManager
+import androidx.loader.content.Loader
+import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.video_item.view.*
-import uk.ac.nott.mrl.openrecipe.GlideApp
+import uk.ac.nott.mrl.openrecipe.OpenRecipe
 import uk.ac.nott.mrl.openrecipe.R
 import uk.ac.nott.mrl.openrecipe.loader.VideoListLoader
+import uk.ac.nott.mrl.openrecipe.model.Video
 
-class VideoListAdapter(private val context: Context) : RecyclerView.Adapter<VideoListAdapter.ViewHolder>(), LoaderManager.LoaderCallbacks<List<Uri>> {
+class VideoListAdapter(private val context: Context, private val recipe: String) : RecyclerView.Adapter<VideoListAdapter.ViewHolder>(), LoaderManager.LoaderCallbacks<List<Video>> {
 	inner class ViewHolder(private val root: View) : RecyclerView.ViewHolder(root) {
 
-		fun setMedia(item: Uri) {
-			root.mediaName.text = item.lastPathSegment
-			GlideApp.with(context)
-					.load(item)
-					.fitCenter()
-					.placeholder(R.drawable.ic_backdrop)
-					.fallback(R.drawable.ic_backdrop)
+		var video: Video? = null
+
+		fun setMedia(item: Video) {
+			root.imageView.setImageResource(R.drawable.bg_video)
+			Picasso.get()
+					.load(item.getURL(OpenRecipe.server.urlRoot, item.start))
 					.into(root.imageView)
 			root.isClickable = true
+
 			root.setOnLongClickListener {
 				val data = ClipData.newPlainText("", "")
 				val shadowBuilder = View.DragShadowBuilder(it.imageView)
@@ -38,15 +38,16 @@ class VideoListAdapter(private val context: Context) : RecyclerView.Adapter<Vide
 					@Suppress("DEPRECATION")
 					it.startDrag(data, shadowBuilder, item, 0)
 				}
-				true
 			}
 		}
 	}
 
-	var videoList: List<Uri> = ArrayList()
+	private var videoList: List<Video> = ArrayList()
 		set(value) {
-			field = value
-			notifyDataSetChanged()
+			if (field != value) {
+				field = value
+				notifyDataSetChanged()
+			}
 		}
 
 	override fun getItemCount(): Int {
@@ -61,16 +62,13 @@ class VideoListAdapter(private val context: Context) : RecyclerView.Adapter<Vide
 		holder.setMedia(videoList[position])
 	}
 
-	override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<Uri>> {
-		Log.i("VideoListAdapter", "Create VideoListLoader")
-		return VideoListLoader(context)
+	override fun onCreateLoader(id: Int, args: Bundle?): Loader<List<Video>> {
+		return VideoListLoader(context, recipe)
 	}
 
-	override fun onLoadFinished(loader: Loader<List<Uri>>, data: List<Uri>) {
+	override fun onLoadFinished(loader: Loader<List<Video>>, data: List<Video>) {
 		videoList = data
-		notifyDataSetChanged()
 	}
 
-	override fun onLoaderReset(loader: Loader<List<Uri>>) {
-	}
+	override fun onLoaderReset(loader: Loader<List<Video>>) {}
 }

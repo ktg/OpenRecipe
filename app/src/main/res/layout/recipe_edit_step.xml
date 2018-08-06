@@ -3,36 +3,48 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	android:background="@drawable/item_background"
-	android:foreground="?android:attr/selectableItemBackground"
 	android:gravity="center"
 	android:orientation="vertical"
-	android:padding="16dp">
+	android:padding="24dp">
+
+	<FrameLayout
+		android:layout_width="450dp"
+		android:layout_height="wrap_content">
+
+		<ImageView
+			android:id="@+id/stillImage"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:adjustViewBounds="true"
+			android:scaleType="fitCenter"
+			tools:ignore="ContentDescription"
+			tools:src="@drawable/ic_local_movies_black_64dp" />
+
+		<TextView
+			android:id="@+id/stepVideoCaption"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="bottom"
+			android:background="@drawable/bg_text_shim"
+			android:padding="12dp"
+			android:textAlignment="center"
+			android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+			tools:text="Preparation Video" />
+
+		<View
+			android:id="@+id/dropTarget"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:background="@drawable/drop_target" />
+	</FrameLayout>
 
 	<TextView
-		android:id="@+id/stepTitle"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginBottom="16dp"
-		android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-		tools:text="Preparation" />
-
-	<ImageView
-		android:id="@+id/stillImage"
-		android:layout_width="wrap_content"
-		android:layout_height="150dp"
-		android:adjustViewBounds="true"
-		android:scaleType="fitCenter"
-		tools:src="@drawable/ic_backdrop" />
-
-	<EditText
-		android:id="@+id/editText"
+		android:id="@+id/stepText"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:hint="Details"
-		android:ems="10"
-		android:inputType="textMultiLine"
-		android:importantForAutofill="no"
-		tools:ignore="UnusedAttribute" />
+		android:textAlignment="center"
+		android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+		tools:ignore="LabelFor,UnusedAttribute"
+		tools:text="• 2 cups Dashi\n• 2 Eggs\n• 1/4 tsp salt\n• 1 1/2 cup gluten-free flour (4-2-1 blend of rice, potato, and tapioca flour)\n• Chives/green onions, shredded\n• 2 Tbsp pickled red ginger, shredded\n• 5-6 oz Octopus\n• 1-2 Tbsp vegetable oil\n• Tonkatsu sauce\n• Mayonnaise\n• Dried green seaweed flakes\n• Bonito Flakes" />
 
 </LinearLayout>

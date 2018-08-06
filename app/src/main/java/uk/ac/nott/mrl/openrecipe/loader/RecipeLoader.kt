@@ -1,25 +1,31 @@
 package uk.ac.nott.mrl.openrecipe.loader
 
-import android.content.AsyncTaskLoader
 import android.content.Context
+import android.util.Log
+import androidx.loader.content.AsyncTaskLoader
 import com.google.gson.Gson
-import uk.ac.nott.mrl.openrecipe.adapter.RecipeEditAdapter
+import okhttp3.Request
+import uk.ac.nott.mrl.openrecipe.OpenRecipe
 import uk.ac.nott.mrl.openrecipe.model.Recipe
-import uk.ac.nott.mrl.openrecipe.model.RecipeStep
 
-class RecipeLoader(context: Context, private val id: String = "test") : AsyncTaskLoader<Recipe>(context) {
+class RecipeLoader(context: Context, private val id: String) : AsyncTaskLoader<Recipe>(context) {
 	private val gson = Gson()
 
 	override fun loadInBackground(): Recipe {
-		val sharedPref = context.getSharedPreferences(RecipeEditAdapter.RECIPE_PREFERENCE, Context.MODE_PRIVATE)
-		val json = sharedPref.getString(id, null)
-		return if(json == null) {
-			val recipe = Recipe(id, "Test")
-			recipe.steps.add(RecipeStep("Preparation"))
-			recipe.steps.add(RecipeStep("Cooking"))
-			recipe
+		val request = Request.Builder()
+				.url(OpenRecipe.server.buildURL()
+						.addPathSegments("api/recipes/")
+						.addPathSegment(id)
+						.build())
+				.build()
+
+		val response = OpenRecipe.server.call(request).execute()
+		return if (response.isSuccessful) {
+			gson.fromJson(response.body()?.string(), Recipe::class.java)
 		} else {
-			gson.fromJson(json, Recipe::class.java)
+			Log.w("RecipeLoader", response.message())
+			//emptyList()
+			Recipe("Fake")
 		}
 	}
 

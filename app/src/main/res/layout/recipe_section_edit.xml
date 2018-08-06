@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:clickable="true">
+
+	<View
+		android:layout_width="3dp"
+		android:layout_height="64dp"
+		android:layout_gravity="top|center_horizontal"
+		android:background="@color/colorPrimary" />
+
+	<View
+		android:id="@+id/bottomLine"
+		android:layout_width="3dp"
+		android:layout_height="64dp"
+		android:layout_gravity="bottom|center_horizontal"
+		android:background="@color/colorPrimary" />
+
+	<androidx.cardview.widget.CardView
+		android:id="@+id/section"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+		android:layout_margin="8dp"
+		android:theme="@style/ThemeOverlay.AppCompat.Dark"
+		app:cardBackgroundColor="@color/colorPrimary"
+		app:cardCornerRadius="24dp"
+		app:cardElevation="0dp">
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal">
+
+			<EditText
+				android:id="@+id/sectionTitle"
+				android:theme="@style/AppTheme.EditWhite"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="16dp"
+				android:layout_weight="1"
+				android:hint="Step Name"
+				android:imeOptions="actionDone"
+				android:inputType="text|textCapSentences|textAutoCorrect"
+				android:singleLine="true" />
+
+			<ImageButton
+				android:id="@+id/deleteStep"
+				style="@style/Widget.AppCompat.ActionButton"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:contentDescription="@string/delete_section"
+				android:tint="#EEE"
+				app:srcCompat="@drawable/ic_clear_black_16dp" />
+		</LinearLayout>
+
+	</androidx.cardview.widget.CardView>
+
+	<androidx.cardview.widget.CardView
+		android:id="@+id/sectionAdd"
+		android:layout_width="48dp"
+		android:layout_height="48dp"
+		android:layout_gravity="center"
+		android:layout_marginTop="16dp"
+		android:layout_marginBottom="16dp"
+		app:cardBackgroundColor="@color/colorPrimary"
+		app:cardCornerRadius="24dp"
+		app:cardElevation="0dp">
+
+		<ImageView
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:adjustViewBounds="true"
+			android:background="@color/colorPrimary"
+			android:padding="8dp"
+			android:scaleType="fitCenter"
+			android:tint="#FFF"
+			app:srcCompat="@drawable/ic_add_black_24dp"
+			tools:ignore="ContentDescription" />
+	</androidx.cardview.widget.CardView>
+</FrameLayout>

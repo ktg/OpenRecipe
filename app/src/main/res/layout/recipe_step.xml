@@ -4,31 +4,46 @@
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	android:background="@drawable/item_background"
-	android:foreground="?android:attr/selectableItemBackground"
 	android:gravity="center"
-	android:orientation="vertical"
-	android:padding="16dp">
+	android:orientation="vertical">
 
 	<TextView
 		android:id="@+id/stepTitle"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginBottom="16dp"
-		android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+		android:layout_margin="16dp"
+		android:textAppearance="@style/TextAppearance.AppCompat.Large"
 		tools:text="Preparation" />
 
-	<com.google.android.exoplayer2.ui.PlayerView
-		android:id="@+id/playerView"
+	<FrameLayout
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		app:repeat_toggle_modes="all|one" />
+		android:layout_height="wrap_content">
+
+		<ImageView
+			android:id="@+id/videoThumb"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:adjustViewBounds="true"
+			android:scaleType="fitCenter"
+			app:srcCompat="@drawable/ic_local_movies_black_64dp" />
+
+		<com.google.android.exoplayer2.ui.PlayerView
+			android:id="@+id/playerView"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			app:resize_mode="fixed_width"
+			app:surface_type="texture_view" />
+	</FrameLayout>
+
 
 	<TextView
-		android:id="@+id/editText"
+		android:id="@+id/stepText"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:layout_margin="16dp"
 		android:ems="10"
-		tools:ignore="UnusedAttribute" />
+		android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+		tools:ignore="UnusedAttribute"
+		tools:text="• 2 cups Dashi\n• 2 Eggs\n• 1/4 tsp salt\n• 1 1/2 cup gluten-free flour (4-2-1 blend of rice, potato, and tapioca flour)\n• Chives/green onions, shredded\n• 2 Tbsp pickled red ginger, shredded\n• 5-6 oz Octopus\n• 1-2 Tbsp vegetable oil\n• Tonkatsu sauce\n• Mayonnaise\n• Dried green seaweed flakes\n• Bonito Flakes" />
 
 </LinearLayout>

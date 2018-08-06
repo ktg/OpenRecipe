@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@android:color/white"
+	tools:context=".activity.RecipeActivity">
+
+	<androidx.appcompat.widget.Toolbar
+		android:id="@+id/toolbar"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@color/colorPrimary"
+		android:elevation="4dp"
+		android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+		app:layout_constraintEnd_toStartOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent" />
+
+	<com.google.android.exoplayer2.ui.PlayerView
+		android:id="@+id/playerView"
+		android:layout_width="0dp"
+		android:elevation="4dp"
+		android:layout_height="wrap_content"
+		app:layout_constraintBottom_toTopOf="@id/stepText"
+		app:layout_constraintEnd_toStartOf="@+id/sectionView"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/toolbar"
+		app:layout_constraintVertical_bias="0.0"
+		app:layout_constraintVertical_chainStyle="packed"
+		app:controller_layout_id="@layout/video_controls"/>
+
+	<TextView
+		android:id="@+id/stepText"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:padding="8dp"
+		android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+		android:textColor="#000"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toStartOf="@+id/sectionView"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@id/playerView" />
+
+	<androidx.recyclerview.widget.RecyclerView
+		android:id="@+id/sectionView"
+		android:layout_width="250dp"
+		android:layout_height="0dp"
+		android:background="#EEE"
+		app:layout_constraintBottom_toTopOf="@id/childListHeader"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toEndOf="@+id/playerView"
+		app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+	<TextView
+		android:id="@+id/childListHeader"
+		android:layout_width="250dp"
+		android:layout_height="wrap_content"
+		android:text="Related Recipes"
+		android:padding="8dp"
+		android:background="@color/colorPrimary"
+		android:textColor="#FFF"
+		android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+		app:layout_constraintBottom_toTopOf="@id/childListView"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toEndOf="@+id/playerView"
+		app:layout_constraintTop_toBottomOf="@+id/sectionView"
+		/>
+
+	<androidx.recyclerview.widget.RecyclerView
+		android:id="@+id/childListView"
+		android:layout_width="250dp"
+		android:layout_height="0dp"
+		android:background="#EEE"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toEndOf="@+id/playerView"
+		app:layout_constraintTop_toBottomOf="@+id/childListHeader" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

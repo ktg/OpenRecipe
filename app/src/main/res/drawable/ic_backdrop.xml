@@ -1,9 +1,17 @@
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="1920dp"
-    android:height="1080dp"
-    android:viewportHeight="1080.0"
-    android:viewportWidth="1920.0">
-    <path
-        android:fillColor="#111"
-        android:pathData="M0,0h1920v1080h-1920z" />
-</vector>
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+	<item>
+		<shape android:shape="rectangle">
+			<size
+				android:width="640dp"
+				android:height="360dp" />
+			<solid android:color="#DDD" />
+		</shape>
+	</item>
+	<item
+		android:bottom="32dp"
+		android:drawable="@drawable/ic_local_movies_black_64dp"
+		android:left="156dp"
+		android:right="156dp"
+		android:top="32dp" />
+</layer-list>

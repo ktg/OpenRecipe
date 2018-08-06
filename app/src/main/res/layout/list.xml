@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	tools:context=".activity.RecipeActivity">
+	android:background="@android:color/white"
+	android:orientation="vertical"
+	tools:context=".activity.RecipeRootActivity">
 
-	<android.support.v7.widget.RecyclerView
+	<androidx.appcompat.widget.Toolbar
+		android:id="@+id/toolbar"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@color/colorPrimary"
+		android:elevation="4dp"
+		android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+	<androidx.recyclerview.widget.RecyclerView
 		android:id="@+id/recyclerView"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent" />
-</merge>
+		android:layout_height="0dp"
+		android:layout_weight="1" />
+</LinearLayout>

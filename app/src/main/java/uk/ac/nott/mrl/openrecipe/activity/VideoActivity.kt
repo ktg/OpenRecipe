@@ -1,33 +1,35 @@
 package uk.ac.nott.mrl.openrecipe.activity
 
-import android.app.LoaderManager
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.Loader
+import android.graphics.Matrix
 import android.net.Uri
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
+import android.view.MenuItem
+import android.view.TextureView
 import android.view.View
-import com.google.android.exoplayer2.DefaultRenderersFactory
-import com.google.android.exoplayer2.ExoPlayerFactory
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.SimpleExoPlayer
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.source.ClippingMediaSource
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.ui.TimeBar
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import com.google.android.exoplayer2.video.VideoListener
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.video.*
+import uk.ac.nott.mrl.openrecipe.OpenRecipe
 import uk.ac.nott.mrl.openrecipe.R
-import uk.ac.nott.mrl.openrecipe.adapter.RecipeEditAdapter
-import uk.ac.nott.mrl.openrecipe.loader.RecipeLoader
 import uk.ac.nott.mrl.openrecipe.model.Recipe
 import uk.ac.nott.mrl.openrecipe.model.RecipeStep
 import java.util.concurrent.TimeUnit
 
-class VideoActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Recipe> {
+class VideoActivity : AppCompatActivity() {
 	enum class Status {
 		Loading,
 		Idle,
@@ -74,22 +76,40 @@ class VideoActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Recipe>
 		playerPosition.text = formatElapsedTime(progress, duration)
 		currentDuration = duration
 		recipeStep?.let {
+			if (setEnd) {
+				if (it.end == 0L) {
+					it.end = duration
+				}
+				setEnd = false
+			}
+
 			playerProgress.setAdGroupTimesMs(longArrayOf(it.start, it.end), booleanArrayOf(false, false), 2)
 		}
 
 	}
 
-	private val gson = Gson()
-	var recipe: Recipe? = null
-	var recipeStep: RecipeStep? = null
+	private var setEnd = true
+	var matrix = Matrix()
+	private var recipeStep: RecipeStep? = null
 		set(value) {
 			field = value
+			editAnnotation.setText(value?.text)
 			val dataSourceFactory = DefaultDataSourceFactory(this, USER_AGENT)
 			val extractorMediaSource = ExtractorMediaSource.Factory(dataSourceFactory)
 			if (value != null) {
-				val uri = Uri.parse(value.uri)
-				exoPlayer?.prepare(extractorMediaSource.createMediaSource(uri))
-				playerMediaName.text = value.name
+				value.video?.let {
+					val uri = Uri.parse(it.getURL(OpenRecipe.server.urlRoot))
+					val extractedSource = extractorMediaSource.createMediaSource(uri)
+					println("End: ${it.end}")
+					val end = if (it.end == 0L) {
+						C.TIME_END_OF_SOURCE
+					} else {
+						it.end * 1000
+					}
+					val clippedSource = ClippingMediaSource(extractedSource, it.start * 1000, end)
+					(playerView.videoSurfaceView as TextureView).setTransform(matrix)
+					exoPlayer?.prepare(clippedSource)
+				}
 			}
 			//updateCurrent()
 		}
@@ -98,6 +118,7 @@ class VideoActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Recipe>
 	private val playerListener = object : Player.DefaultEventListener() {
 		override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
 			println("onPlayerStateChanged")
+			(playerView.videoSurfaceView as TextureView).setTransform(matrix)
 			when (playbackState) {
 				Player.STATE_BUFFERING -> {
 					status = Status.Loading
@@ -121,17 +142,10 @@ class VideoActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Recipe>
 		}
 	}
 
+
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.video)
-
-		window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-				or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-				or View.SYSTEM_UI_FLAG_IMMERSIVE)
-
-		//setSupportActionBar(toolbar)
-		//supportActionBar?.setDisplayHomeAsUpEnabled(true)
-		//supportActionBar?.setDisplayShowTitleEnabled(false)
 
 		playButton.setOnClickListener {
 			exoPlayer?.playWhenReady = true
@@ -155,6 +169,19 @@ class VideoActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Recipe>
 			}
 		}
 
+		doneButton.setOnClickListener {
+			done()
+		}
+
+		editAnnotation.addTextChangedListener(object : TextWatcher {
+			override fun afterTextChanged(text: Editable?) {
+				recipeStep?.text = text.toString()
+			}
+
+			override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+			override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+		})
+
 		playerProgress.addListener(object : TimeBar.OnScrubListener {
 			override fun onScrubMove(timeBar: TimeBar?, position: Long) {
 				playerPosition.text = formatElapsedTime(position, currentDuration)
@@ -171,43 +198,79 @@ class VideoActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Recipe>
 		status = Status.Loading
 	}
 
-	private fun load(bundle: Bundle?) {
-		val intentBundle = intent.extras
-		var loadBundle = bundle
-		if (intentBundle != null && intentBundle.containsKey("recipe")) {
-			loadBundle = intentBundle
-		}
-
-		loaderManager.initLoader(0, loadBundle, this)
+	private fun done() {
+		setResult(Activity.RESULT_OK, Intent()
+				.putExtra("step", gson.toJson(recipeStep))
+				.putExtra("index", intent.getIntExtra("index", 0)))
+		finish()
 	}
 
 	override fun onResume() {
 		super.onResume()
-		val renderersFactory = DefaultRenderersFactory(this, null)
+		val renderersFactory = DefaultRenderersFactory(this)
 		exoPlayer = ExoPlayerFactory.newSimpleInstance(renderersFactory, trackSelector)
 		exoPlayer?.addListener(playerListener)
+		exoPlayer?.addVideoListener(object : VideoListener {
+			override fun onVideoSizeChanged(width: Int, height: Int, unappliedRotationDegrees: Int, pixelWidthHeightRatio: Float) {
+				println("Video size changed")
+				recipeStep?.video?.zoom?.let {
+					matrix = Matrix()
+					val centerXRatio = recipeStep?.video?.x ?: 0.5f
+					val centerYRatio = recipeStep?.video?.y ?: 0.5f
+
+					val surface = playerView.videoSurfaceView as TextureView
+					val viewAspectRatio = surface.width / surface.height.toFloat()
+					val aspectRatio = width / height.toFloat()
+					println("Pixel Ratio: $width / $height = $aspectRatio, ${surface.width} / ${surface.height} = $viewAspectRatio")
+
+					if (viewAspectRatio > aspectRatio) {
+						matrix.setScale(it, it, surface.height * aspectRatio * centerXRatio, surface.height * centerYRatio)
+					} else {
+						matrix.setScale(it, it, surface.width * centerXRatio, surface.width / aspectRatio * centerYRatio)
+					}
+
+					println("Set scale: $matrix")
+					(playerView.videoSurfaceView as TextureView).setTransform(matrix)
+				}
+			}
+
+			override fun onRenderedFirstFrame() {
+				(playerView.videoSurfaceView as TextureView).setTransform(matrix)
+			}
+
+		})
 
 		playerView.player = exoPlayer
-		load(null)
+		load()
+	}
+
+	private fun load() {
+		recipeStep = gson.fromJson(intent.getStringExtra("step"), RecipeStep::class.java)
 	}
 
 	override fun onPause() {
 		super.onPause()
 		exoPlayer?.release()
-		recipe?.let {
-			val sharedPref = getSharedPreferences(RecipeEditAdapter.RECIPE_PREFERENCE, Context.MODE_PRIVATE)
-			sharedPref.edit()
-					.putString(it.id, gson.toJson(it))
-					.apply()
-		}
 	}
 
-	public override fun onSaveInstanceState(savedInstanceState: Bundle) {
+	override fun onOptionsItemSelected(item: MenuItem): Boolean {
+		when (item.itemId) {
+			android.R.id.home -> {
+				done()
+				return true
+			}
+		}
+
+		return super.onOptionsItemSelected(item)
+	}
+
+
+	override fun onSaveInstanceState(savedInstanceState: Bundle) {
 		savedInstanceState.putLong(STATE_PROGRESS, exoPlayer?.contentPosition ?: 0)
 		super.onSaveInstanceState(savedInstanceState)
 	}
 
-	public override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+	override fun onRestoreInstanceState(savedInstanceState: Bundle) {
 		super.onRestoreInstanceState(savedInstanceState)
 		exoPlayer?.seekTo(savedInstanceState.getLong(STATE_PROGRESS, 0))
 	}
@@ -233,36 +296,20 @@ class VideoActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<Recipe>
 		}
 	}
 
-	override fun onCreateLoader(id: Int, args: Bundle?): Loader<Recipe> {
-
-		return RecipeLoader(this)
-	}
-
-	override fun onLoadFinished(loader: Loader<Recipe>?, data: Recipe?) {
-		this.recipe = data
-		data?.let {
-			val index = intent.getIntExtra("step", -1)
-			if (index > -1) {
-				this.recipeStep = it.steps[index]
-			}
-		}
-	}
-
-	override fun onLoaderReset(loader: Loader<Recipe>?) {
-	}
-
 	companion object {
+		private val gson = Gson()
 		private val TAG = VideoActivity::class.java.simpleName
 		const val USER_AGENT = "OpenRecipe"
 		private const val STATE_PROGRESS = "progress"
 
-		fun start(context: Context, video: RecipeStep) {
-			context.startActivity(intent(context, video))
+		fun start(context: Activity, recipe: Recipe, step: Int, request: Int) {
+			context.startActivityForResult(intent(context, recipe, step), request)
 		}
 
-		private fun intent(context: Context, video: RecipeStep): Intent {
+		private fun intent(context: Context, recipe: Recipe, step: Int): Intent {
 			return Intent(context, VideoActivity::class.java)
-					.putExtra("recipeStep", video.uri)
+					.putExtra("step", gson.toJson(recipe.steps[step]))
+					.putExtra("index", step)
 		}
 	}
 }

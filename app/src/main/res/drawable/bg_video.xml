@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+	android:shape="rectangle">
+	<item>
+		<shape android:shape="rectangle">
+			<solid android:color="#DDD" />
+			<size
+				android:width="640dp"
+				android:height="360dp" />
+		</shape>
+	</item>
+
+	<item
+		android:bottom="32dp"
+		android:drawable="@drawable/ic_local_movies_black_64dp"
+		android:left="172dp"
+		android:right="172dp"
+		android:top="32dp" />
+</layer-list>
