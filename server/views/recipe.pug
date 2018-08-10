@@ -1,0 +1,21 @@
+extends layout
+
+block title
+	= "recipe_" + recipe._id
+
+block content
+	ul.mdc-list.mdc-list--two-line
+		li.mdc-list-item
+			span.mdc-list-item__text
+				span.mdc-list-item__primary-text= recipe.name
+				span.mdc-list-item__secondary-text= recipe.author
+
+	each step in recipe.steps
+		div(style="padding: 8px")
+			if step.video != null
+				video(controls=true, style="max-width: 100%")
+					- var start = step.start / 1000
+					- var end = step.end / 1000
+					source(src="videos/" + step.video.file + "#t=" + start + "," + end, type="video/mp4")
+
+			div= step.name

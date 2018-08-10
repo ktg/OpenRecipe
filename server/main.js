@@ -46,7 +46,30 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'www')));
 
 app.get('/', (req, res) => {
-	res.render('index');
+	db.collection('recipes').find().toArray()
+		.then((result) => {
+			res.render('index', {recipes: result});
+		})
+		.catch((err) => {
+			console.log(err);
+			res.status(500).send(err);
+		});
+});
+
+app.get('/recipe_:id', (req, res) => {
+	let id = req.params.id;
+	let index = id.indexOf('.');
+	if (index > 0) {
+		id = id.substr(0, index)
+	}
+	db.collection('recipes').findOne({'_id': ObjectID(id)})
+		.then((result) => {
+			res.render('recipe', {recipe: result});
+		})
+		.catch((err) => {
+			console.log(err);
+			res.status(500).send(err);
+		});
 });
 
 app.get('/videos', (req, res) => {
@@ -138,13 +161,13 @@ app.post('/api/videos', videoUpload, (req, res) => {
 				const name = hash.digest('hex') + '.' + mime.extension(videoFile.mimetype);
 				const destPath = 'videos/' + name;
 				if (fs.existsSync(destPath)) {
-                    fs.unlinkSync(videoFile.path)
-                } else {
-                	fs.renameSync(videoFile.path, destPath);
-                }
+					fs.unlinkSync(videoFile.path)
+				} else {
+					fs.renameSync(videoFile.path, destPath);
+				}
 
 				let videoList = [];
-				if(req.files['timings'] == null) {
+				if (req.files['timings'] == null) {
 					let video = {
 						name: camera.name,
 						file: name,
@@ -324,45 +347,50 @@ app.use(function (req, res, next) {
 	next(createError(404));
 });
 
-MongoClient.connect('mongodb://mongo:27017', (err, client) => {
-	if (err) return console.log(err);
-	db = client.db('openrecipe');
+let delay = 1000;
+const attemptConnection = function() {
+	MongoClient.connect('mongodb://mongo:27017')
+		.then((client) => {
+			console.log("Connected to DB");
+			db = client.db('openrecipe');
 
-	const server = http.createServer(app);
+			const server = http.createServer(app);
+			server.listen(8080);
+			server.on('error', (error) => {
+				if (error.syscall !== 'listen') {
+					throw error;
+				}
 
-	/**
-	 * Listen on provided port, on all network interfaces.
-	 */
+				const bind = typeof port === 'string'
+					? 'Pipe ' + port
+					: 'Port ' + port;
 
-	server.listen(8080);
-	server.on('error', (error) => {
-		if (error.syscall !== 'listen') {
-			throw error;
-		}
+				// handle specific listen errors with friendly messages
+				switch (error.code) {
+					case 'EACCES':
+						console.error(bind + ' requires elevated privileges');
+						process.exit(1);
+						break;
+					case 'EADDRINUSE':
+						console.error(bind + ' is already in use');
+						process.exit(1);
+						break;
+					default:
+						throw error;
+				}
+			});
+			server.on('listening', () => {
+				const addr = server.address();
+				const bind = typeof addr === 'string'
+					? 'pipe ' + addr
+					: 'port ' + addr.port;
+				debug('Listening on ' + bind);
+			});
+		})
+		.catch((err) => {
+			//console.log(err);
+			setTimeout(attemptConnection, delay);
+		});
+};
 
-		const bind = typeof port === 'string'
-			? 'Pipe ' + port
-			: 'Port ' + port;
-
-		// handle specific listen errors with friendly messages
-		switch (error.code) {
-			case 'EACCES':
-				console.error(bind + ' requires elevated privileges');
-				process.exit(1);
-				break;
-			case 'EADDRINUSE':
-				console.error(bind + ' is already in use');
-				process.exit(1);
-				break;
-			default:
-				throw error;
-		}
-	});
-	server.on('listening', () => {
-		const addr = server.address();
-		const bind = typeof addr === 'string'
-			? 'pipe ' + addr
-			: 'port ' + addr.port;
-		debug('Listening on ' + bind);
-	});
-});
+attemptConnection();

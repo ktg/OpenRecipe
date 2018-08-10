@@ -10,5 +10,7 @@
 .externalNativeBuild
 /server/videos/
 /server/db/
+/server/backup
 /server/node_modules/
 /server/uploads/
+/keystore.properties

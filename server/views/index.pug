@@ -1,5 +1,12 @@
 extends layout
 
+block title
+	| Recipes
+
 block content
-    h1= title
-    p Welcome to #{title}
+	ul.mdc-list.mdc-list--two-line
+		each recipe in recipes
+			a(href="recipe_" + recipe._id + ".htm").mdc-list-item
+				span.mdc-list-item__text
+					span.mdc-list-item__primary-text= recipe.name
+					span.mdc-list-item__secondary-text= recipe.author

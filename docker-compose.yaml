@@ -10,6 +10,7 @@ services:
         restart: always
         volumes:
             - './server/db:/data/db'
+            - './server/backup:/backup'
 
     mongo-express:
         image: mongo-express
